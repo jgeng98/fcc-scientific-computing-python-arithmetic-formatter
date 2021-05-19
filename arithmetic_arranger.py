@@ -20,22 +20,34 @@ def check_valid_expression(exp):
     return
 
 
-def format_expression(exp):
+def format_expression(exp, flag):
     operand1 = exp.split()[0]
     operator = exp.split()[1]
     operand2 = exp.split()[2]
 
     if len(operand1) > len(operand2):
         operand2 = operator + (len(operand1) - len(operand2) + 1) * " " + operand2
-        operand1 = 2 * " " + operand1
+        operand1 = operand1.rjust(len(operand1) + 2)
     elif len(operand1) < len(operand2):
-        operand1 = (len(operand2) - len(operand1) + 2) * " " + operand1
+        operand1 = operand1.rjust(len(operand2) + 2)
         operand2 = operator + " " + operand2
     else:
         operand1 = 2 * " " + operand1
         operand2 = operator + " " + operand2
 
-    return operand1 + "\n" + operand2 + "\n" + len(operand1) * "-"
+    if flag == True:
+        ans = str(eval(exp))
+        return (
+            operand1
+            + "\n"
+            + operand2
+            + "\n"
+            + len(operand1) * "-"
+            + "\n"
+            + ans.rjust(len(operand1))
+        )
+    else:
+        return operand1 + "\n" + operand2 + "\n" + len(operand1) * "-"
 
 
 def arithmetic_arranger(problems, solve=False):
@@ -53,3 +65,7 @@ def arithmetic_arranger(problems, solve=False):
     arranged_problems = []
 
     return arranged_problems
+
+
+if __name__ == "__main__":
+    print(format_expression("523 - 49", True))
