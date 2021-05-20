@@ -2,8 +2,8 @@ from unittest.main import main
 
 
 def check_valid_expression(exp):
-    operators = exp.split()[1::2]
     operands = exp.split()[::2]
+    operators = exp.split()[1::2]
 
     # check for appropriate operators
     if not set(operators).issubset(set(["+", "-"])):
@@ -11,43 +11,42 @@ def check_valid_expression(exp):
 
     # check for only digits in operands
     if not all([x.isdigit() for x in operands]):
-        return "Error: must only contain digits."
+        return "Error: Numbers must only contain digits."
 
     # check each operand has max four digits
-    if not all([len(x) > 4 for x in operands]):
+    if not all([len(x) <= 4 for x in operands]):
         return "Error: Numbers cannot be more than four digits."
 
     return
 
 
-def format_expression(exp, flag):
-    operand1 = exp.split()[0]
-    operator = exp.split()[1]
-    operand2 = exp.split()[2]
+def format_expression(exp, solve):
+    operand1, operator, operand2 = exp.split()
+    width = max(len(operand1), len(operand2)) + 2
 
-    if len(operand1) > len(operand2):
-        operand2 = operator + (len(operand1) - len(operand2) + 1) * " " + operand2
-        operand1 = operand1.rjust(len(operand1) + 2)
-    elif len(operand1) < len(operand2):
-        operand1 = operand1.rjust(len(operand2) + 2)
-        operand2 = operator + " " + operand2
-    else:
-        operand1 = 2 * " " + operand1
-        operand2 = operator + " " + operand2
+    line1 = operand1.rjust(width)
+    line2 = operator + operand2.rjust(width - 1)
 
-    if flag == True:
-        ans = str(eval(exp))
-        return (
-            operand1
-            + "\n"
-            + operand2
-            + "\n"
-            + len(operand1) * "-"
-            + "\n"
-            + ans.rjust(len(operand1))
-        )
+    if solve == True:
+        if operator == "+":
+            ans = int(operand1) + int(operand2)
+        else:
+            ans = int(operand1) - int(operand2)
+        return [line1, line2, width * "-", str(ans).rjust(width)]
     else:
-        return operand1 + "\n" + operand2 + "\n" + len(operand1) * "-"
+        return [line1, line2, width * "-"]
+
+
+def format_all_problems(formatted_problems):
+    nrows = len(formatted_problems[0])
+    result = ""
+
+    for i in range(nrows):
+        row = [exp[i] for exp in formatted_problems]
+        row = "    ".join(row)
+        result += row + "\n"
+
+    return result[:-1]
 
 
 def arithmetic_arranger(problems, solve=False):
@@ -56,16 +55,13 @@ def arithmetic_arranger(problems, solve=False):
     if len(problems) > 5:
         return "Error: Too many problems."
 
+    # other error checking (only addition/subtraction, only digits, operands 4 digits or less)
     for exp in problems:
         error = check_valid_expression(exp)
 
         if error is not None:
             return error
 
-    arranged_problems = []
+    result = [format_expression(exp, solve) for exp in problems]
 
-    return arranged_problems
-
-
-if __name__ == "__main__":
-    print(format_expression("523 - 49", True))
+    return format_all_problems(result)
