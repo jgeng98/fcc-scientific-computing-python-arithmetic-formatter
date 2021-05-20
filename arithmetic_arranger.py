@@ -21,6 +21,15 @@ def check_valid_expression(exp):
 
 
 def format_expression(exp, solve):
+    """Takes a single arithmetic expression and formats it vertically.
+
+    Args:
+        exp (str): Arithmetic expression
+        solve (bool): Argument that dictates whether to display the solution of the expression
+
+    Returns:
+        list[str]: Each element is a formatted row of the vertical expression
+    """
     operand1, operator, operand2 = exp.split()
     width = max(len(operand1), len(operand2)) + 2
 
@@ -38,6 +47,14 @@ def format_expression(exp, solve):
 
 
 def format_all_problems(formatted_problems):
+    """Horizontally appends a list of vertically formatted expressions.
+
+    Args:
+        formatted_problems (list[list[str]]): Each element is a list consisting of the lines of a vertically formatted expression.
+
+    Returns:
+        str: Vertically formatted expressions into a single row.
+    """
     nrows = len(formatted_problems[0])
     result = ""
 
